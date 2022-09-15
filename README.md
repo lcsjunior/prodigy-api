@@ -18,6 +18,7 @@ Install packages and migrate all:
 
 ```bash
 npm install
+npm run prepare
 npx sequelize-cli db:migrate
 npx sequelize-cli db:seed:all
 ```
