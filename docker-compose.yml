@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  database:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: $MY_DB_USER
+      POSTGRES_PASSWORD: $MY_DB_PASS
+      POSTGRES_DB: prodigy_api
+    ports:
+      - '5438:5432'
+    volumes:
+      - /opt/prodigy-api/postgres-data:/var/lib/postgresql/data
