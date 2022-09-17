@@ -1,4 +1,4 @@
-function currentUser(req, res, next) {
+function detailUser(req, res, next) {
   const {
     user: { username },
   } = req;
@@ -21,7 +21,7 @@ function logout(req, res, next) {
 }
 
 module.exports = {
-  currentUser,
+  detailUser,
   login,
   logout,
 };
