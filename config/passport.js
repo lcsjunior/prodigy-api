@@ -12,6 +12,8 @@ passport.deserializeUser(async (id, done) => {
     attributes: [
       'id',
       'username',
+      'firstName',
+      'lastName',
       [Sequelize.literal('"roles"."slug"'), 'role'],
     ],
   });

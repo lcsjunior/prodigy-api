@@ -1,9 +1,11 @@
 function detailUser(req, res, next) {
   const {
-    user: { username },
+    user: { username, firstName, lastName },
   } = req;
   return res.json({
     username,
+    firstName,
+    lastName,
   });
 }
 
