@@ -2,15 +2,16 @@ const { AccessControl } = require('accesscontrol');
 
 let grantsObject = {
   sa: {
+    $extend: ['admin'],
+  },
+  admin: {
+    $extend: ['user'],
     users: {
       'create:any': ['*'],
       'read:any': ['*'],
       'update:any': ['*'],
       'delete:any': ['*'],
     },
-  },
-  admin: {
-    $extend: ['sa'],
   },
   user: {
     users: {

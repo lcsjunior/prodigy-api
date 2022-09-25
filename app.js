@@ -13,6 +13,7 @@ const sessionStore = new SequelizeStore({ db: sequelize });
 // app routing
 const indexRouter = require('./routes/index');
 const userRouter = require('./routes/user');
+const channelRouter = require('./routes/channel');
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.use(passport.session());
 
 app.use('/', indexRouter);
 app.use('/users', userRouter);
+app.use('/channels', channelRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
