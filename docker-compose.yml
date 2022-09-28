@@ -11,3 +11,4 @@ services:
       - '5438:5432'
     volumes:
       - /opt/prodigy-api/postgres-data:/var/lib/postgresql/data
+      - ./db/sql/install-extensions.sql:/docker-entrypoint-initdb.d/install-extensions.sql
