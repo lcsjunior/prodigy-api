@@ -6,13 +6,7 @@ const { passport, isAuthenticated } = require('../config/passport');
 
 router.get('/', index);
 router.get('/user', isAuthenticated, detailUser);
-router.post(
-  '/login',
-  passport.authenticate('local', {
-    failureRedirect: null,
-  }),
-  login
-);
+router.post('/login', passport.authenticate('local'), login);
 router.post('/logout', logout);
 
 module.exports = router;
