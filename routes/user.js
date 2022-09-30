@@ -1,13 +1,13 @@
 const express = require('express');
-const { param } = require('express-validator');
 const router = express.Router();
 const { isAuthenticated } = require('../config/passport');
 const { list, create, detail, update, remove } = require('../controllers/user');
+const { validate } = require('../validators');
 
 router.get('/', isAuthenticated, list);
-router.post('/', isAuthenticated, create);
-router.get('/:id', isAuthenticated, param('id').toInt(), detail);
-router.put('/:id', isAuthenticated, param('id').toInt(), update);
-router.delete('/:id', isAuthenticated, param('id').toInt(), remove);
+router.post('/', isAuthenticated, validate('createUser'), create);
+router.get('/:id', isAuthenticated, validate('retrieveUser'), detail);
+router.put('/:id', isAuthenticated, validate('retrieveUser'), update);
+router.delete('/:id', isAuthenticated, validate('retrieveUser'), remove);
 
 module.exports = router;

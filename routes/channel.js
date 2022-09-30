@@ -1,5 +1,4 @@
 const express = require('express');
-const { param } = require('express-validator');
 const router = express.Router();
 const { isAuthenticated } = require('../config/passport');
 const {
@@ -9,11 +8,12 @@ const {
   update,
   remove,
 } = require('../controllers/channel');
+const { validate } = require('../validators');
 
 router.get('/', isAuthenticated, list);
-router.post('/', isAuthenticated, create);
-router.get('/:id', isAuthenticated, param('id').toInt(), detail);
-router.put('/:id', isAuthenticated, param('id').toInt(), update);
-router.delete('/:id', isAuthenticated, param('id').toInt(), remove);
+router.post('/', isAuthenticated, validate('createChannel'), create);
+router.get('/:id', isAuthenticated, validate('retrieveChannel'), detail);
+router.put('/:id', isAuthenticated, validate('retrieveChannel'), update);
+router.delete('/:id', isAuthenticated, validate('retrieveChannel'), remove);
 
 module.exports = router;

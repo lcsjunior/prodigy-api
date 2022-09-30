@@ -75,7 +75,11 @@ async function detail(req, res, next) {
       },
       where: { userId: user.id, id: params.id },
     });
-    res.json(channel);
+    if (channel) {
+      res.json(channel);
+    } else {
+      res.sendStatus(204);
+    }
   } catch (err) {
     next(err);
   }

@@ -3,11 +3,12 @@ const express = require('express');
 const session = require('express-session');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const logger = require('morgan');
 const { passport } = require('./config/passport');
+const { sequelize, Sequelize } = require('./models');
 
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
-const { sequelize, Sequelize } = require('./models');
 const sessionStore = new SequelizeStore({ db: sequelize });
 
 // app routing
@@ -26,6 +27,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.text());
 
 app.use(
   session({

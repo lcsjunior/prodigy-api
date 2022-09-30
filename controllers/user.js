@@ -7,9 +7,10 @@ async function list(req, res, next) {
     const permission = ac.can(user.role).readAny('users');
     if (permission.granted) {
       const users = await User.findAll();
-      return res.json(users);
+      res.json(users);
+    } else {
+      res.sendStatus(403);
     }
-    res.sendStatus(403);
   } catch (err) {
     next(err);
   }
@@ -29,9 +30,10 @@ async function create(req, res, next) {
         username: body.username,
         password: body.password,
       });
-      return res.json(newUser);
+      res.json(newUser);
+    } else {
+      res.sendStatus(403);
     }
-    res.sendStatus(403);
   } catch (err) {
     next(err);
   }
@@ -46,9 +48,14 @@ async function detail(req, res, next) {
         : ac.can(user.role).readAny('users');
     if (permission.granted) {
       const user = await User.findByPk(params.id);
-      return res.json(user);
+      if (user) {
+        return res.json(user);
+      } else {
+        res.sendStatus(204);
+      }
+    } else {
+      res.sendStatus(403);
     }
-    res.sendStatus(403);
   } catch (err) {
     next(err);
   }
@@ -70,9 +77,10 @@ async function update(req, res, next) {
         },
         { where: { id: params.id }, individualHooks: true }
       );
-      return res.json({ updatedRows });
+      res.json({ updatedRows });
+    } else {
+      res.sendStatus(403);
     }
-    res.sendStatus(403);
   } catch (err) {
     next(err);
   }
@@ -84,9 +92,10 @@ async function remove(req, res, next) {
     const permission = ac.can(user.role).deleteAny('users');
     if (permission.granted) {
       const deleted = await User.destroy({ where: { id: params.id } });
-      return res.json({ deleted });
+      res.json({ deleted });
+    } else {
+      res.sendStatus(403);
     }
-    res.sendStatus(403);
   } catch (err) {
     next(err);
   }
