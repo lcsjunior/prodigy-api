@@ -1,7 +1,7 @@
 const { ac } = require('../config/grants');
 const { User, Role } = require('../models');
 
-async function list(req, res, next) {
+const list = async (req, res, next) => {
   try {
     const { user } = req;
     const permission = ac.can(user.role).readAny('users');
@@ -14,9 +14,9 @@ async function list(req, res, next) {
   } catch (err) {
     next(err);
   }
-}
+};
 
-async function create(req, res, next) {
+const create = async (req, res, next) => {
   try {
     const { user, body } = req;
     const permission = ac.can(user.role).createAny('users');
@@ -37,9 +37,9 @@ async function create(req, res, next) {
   } catch (err) {
     next(err);
   }
-}
+};
 
-async function detail(req, res, next) {
+const detail = async (req, res, next) => {
   try {
     const { user, params } = req;
     const permission =
@@ -59,9 +59,9 @@ async function detail(req, res, next) {
   } catch (err) {
     next(err);
   }
-}
+};
 
-async function update(req, res, next) {
+const update = async (req, res, next) => {
   try {
     const { user, body, params } = req;
     const permission =
@@ -84,9 +84,9 @@ async function update(req, res, next) {
   } catch (err) {
     next(err);
   }
-}
+};
 
-async function remove(req, res, next) {
+const remove = async (req, res, next) => {
   try {
     const { user, params } = req;
     const permission = ac.can(user.role).deleteAny('users');
@@ -99,7 +99,7 @@ async function remove(req, res, next) {
   } catch (err) {
     next(err);
   }
-}
+};
 
 module.exports = {
   list,

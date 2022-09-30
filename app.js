@@ -57,11 +57,9 @@ app.use((req, res, next) => {
 // error handler
 app.use((err, req, res, next) => {
   if (err instanceof Sequelize.ValidationError && err.errors) {
-    const errors = err.errors.map((e) => {
-      const { message, path } = e;
-      return req.app.get('env') === 'development'
-        ? err.errors
-        : { message, path };
+    const errors = err.errors.map((error) => {
+      const { message, path } = error;
+      return req.app.get('env') === 'development' ? error : { message, path };
     });
     return res.status(400).send(errors);
   }

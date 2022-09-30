@@ -2,7 +2,7 @@ const { Channel, sequelize } = require('../models');
 
 const psw = process.env.PGP_SYM_KEY;
 
-async function list(req, res, next) {
+const list = async (req, res, next) => {
   try {
     const { user } = req;
     const channels = await Channel.findAll({
@@ -32,9 +32,9 @@ async function list(req, res, next) {
   } catch (err) {
     next(err);
   }
-}
+};
 
-async function create(req, res, next) {
+const create = async (req, res, next) => {
   try {
     const { user, body } = req;
     const newChannel = await Channel.create({
@@ -47,9 +47,9 @@ async function create(req, res, next) {
   } catch (err) {
     next(err);
   }
-}
+};
 
-async function detail(req, res, next) {
+const detail = async (req, res, next) => {
   try {
     const { user, params } = req;
     const channel = await Channel.findOne({
@@ -83,9 +83,9 @@ async function detail(req, res, next) {
   } catch (err) {
     next(err);
   }
-}
+};
 
-async function update(req, res, next) {
+const update = async (req, res, next) => {
   try {
     const { user, body, params } = req;
     const [updatedRows] = await Channel.update(
@@ -99,9 +99,9 @@ async function update(req, res, next) {
   } catch (err) {
     next(err);
   }
-}
+};
 
-async function remove(req, res, next) {
+const remove = async (req, res, next) => {
   try {
     const { user, params } = req;
     const deleted = await Channel.destroy({
@@ -111,7 +111,7 @@ async function remove(req, res, next) {
   } catch (err) {
     next(err);
   }
-}
+};
 
 module.exports = {
   list,

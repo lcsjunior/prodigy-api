@@ -1,5 +1,6 @@
 const passport = require('passport');
 const { Strategy: LocalStrategy } = require('passport-local');
+const { Op } = require('sequelize');
 const { User, Role, Sequelize } = require('../models');
 
 passport.serializeUser((user, done) => {
@@ -24,7 +25,9 @@ passport.deserializeUser(async (id, done) => {
 
 passport.use(
   new LocalStrategy(async (username, password, done) => {
-    const user = await User.findOne({ where: { username } });
+    const user = await User.findOne({
+      where: { [Op.or]: { username, email: username } },
+    });
     if (user) {
       const match = await user.isValidPassword(password);
       if (match) {

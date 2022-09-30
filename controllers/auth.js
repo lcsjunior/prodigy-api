@@ -1,4 +1,4 @@
-function detailUser(req, res, next) {
+const detailUser = (req, res, next) => {
   const {
     user: { username, firstName, lastName },
   } = req;
@@ -7,20 +7,20 @@ function detailUser(req, res, next) {
     firstName,
     lastName,
   });
-}
+};
 
-function login(req, res) {
+const login = (req, res) => {
   res.sendStatus(200);
-}
+};
 
-function logout(req, res, next) {
+const logout = (req, res, next) => {
   req.logout((err) => {
     if (err) {
       return next(err);
     }
     res.sendStatus(200);
   });
-}
+};
 
 module.exports = {
   detailUser,
