@@ -17,6 +17,7 @@ let grantsObject = {
     users: {
       'read:own': ['*'],
       'update:own': ['*'],
+      'delete:own': ['*'],
     },
   },
 };
@@ -24,6 +25,5 @@ let grantsObject = {
 const ac = new AccessControl(grantsObject);
 
 module.exports = {
-  grantsObject,
   ac,
 };

@@ -18,8 +18,10 @@ passport.deserializeUser(async (id, done) => {
       [Sequelize.literal('"roles"."slug"'), 'role'],
     ],
   });
-  if (user.id === id) {
+  if (user?.id === id) {
     done(null, user.toJSON());
+  } else {
+    done(null, false);
   }
 });
 

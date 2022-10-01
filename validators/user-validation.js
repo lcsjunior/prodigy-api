@@ -3,21 +3,27 @@ const { User } = require('../models');
 const { messages } = require('../utils/messages');
 
 const checkEmailExists = async (email) => {
-  const user = await User.findOne({ where: { email } });
+  const user = await User.findOne({
+    attributes: ['id'],
+    raw: true,
+    paranoid: false,
+    where: { email },
+  });
   if (user) {
     return Promise.reject(messages.alreadyInUse);
   }
 };
 
 const checkUsernameExists = async (username) => {
-  const user = await User.findOne({ where: { username } });
+  const user = await User.findOne({
+    attributes: ['id'],
+    raw: true,
+    paranoid: false,
+    where: { username },
+  });
   if (user) {
     return Promise.reject(messages.alreadyInUse);
   }
-};
-
-const retrieveUser = () => {
-  return [param('id').isInt().toInt()];
 };
 
 const createUser = () => {
@@ -28,7 +34,16 @@ const createUser = () => {
   ];
 };
 
+const readUser = () => {
+  return [param('id').isInt().toInt()];
+};
+
+const updateUser = () => {
+  return [param('id').isInt().toInt(), body('password').isLength({ min: 6 })];
+};
+
 module.exports = {
-  retrieveUser,
   createUser,
+  readUser,
+  updateUser,
 };

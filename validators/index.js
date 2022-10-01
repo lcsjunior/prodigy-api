@@ -15,16 +15,17 @@ fs.readdirSync(__dirname)
     Object.assign(chains, validationChain);
   });
 
-const validate = (method) => {
-  const validations = chains[method]();
+const validate = (action) => {
+  const validations = chains[action]();
   return async (req, res, next) => {
     await Promise.all(validations.map((validation) => validation.run(req)));
     const result = validationResult(req);
     const hasErrors = !result.isEmpty();
     if (hasErrors) {
-      return res.status(400).json({ errors: result.array() });
+      res.status(400).json({ errors: result.array() });
+    } else {
+      next();
     }
-    next();
   };
 };
 
