@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       channelId: { type: DataTypes.INTEGER, allowNull: false },
       readAPIKey: DataTypes.STRING,
       writeAPIKey: DataTypes.STRING,
+      displayName: DataTypes.STRING,
     },
     {
       sequelize,

@@ -29,6 +29,9 @@ module.exports = {
       writeAPIKey: {
         type: Sequelize.STRING
       },
+      displayName: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
