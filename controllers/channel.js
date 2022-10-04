@@ -44,7 +44,7 @@ const create = async (req, res, next) => {
       writeAPIKey: sequelize.fn('pgp_sym_encrypt', body.writeAPIKey, psw),
       displayName: body.displayName,
     });
-    res.json(newChannel);
+    res.status(201).json(newChannel);
   } catch (err) {
     next(err);
   }

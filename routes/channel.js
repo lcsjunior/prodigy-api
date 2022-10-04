@@ -13,7 +13,7 @@ const { validate } = require('../validators');
 router.get('/', isAuthenticated, list);
 router.post('/', isAuthenticated, validate('createChannel'), create);
 router.get('/:id', isAuthenticated, validate('readChannel'), detail);
-router.put('/:id', isAuthenticated, validate('readChannel'), update);
+router.patch('/:id', isAuthenticated, validate('readChannel'), update);
 router.delete('/:id', isAuthenticated, validate('readChannel'), remove);
 
 module.exports = router;

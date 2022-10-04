@@ -14,7 +14,7 @@ router.get(
   validate('readUser'),
   detail
 );
-router.put(
+router.patch(
   '/:id',
   isAuthenticated,
   checkPermission('updateOwnUser'),

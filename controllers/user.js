@@ -21,7 +21,7 @@ const create = async (req, res, next) => {
       username: body.username,
       password: body.password,
     });
-    res.json(newUser);
+    res.status(201).json(newUser);
   } catch (err) {
     next(err);
   }
