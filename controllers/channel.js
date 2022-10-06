@@ -30,6 +30,7 @@ const list = async (req, res, next) => {
         ],
       },
       where: { userId: user.id },
+      order: [['id', 'ASC']],
     });
     const data = await readDataFromChannel(channels);
     res.json(data);
@@ -84,7 +85,7 @@ const detail = async (req, res, next) => {
     });
     if (channel) {
       const data = await readDataFromChannel([channel]);
-      res.json(data);
+      res.json(data[0]);
     } else {
       res.sendStatus(204);
     }
@@ -102,7 +103,9 @@ const update = async (req, res, next) => {
         writeAPIKey: sequelize.fn('pgp_sym_encrypt', body.writeAPIKey, psw),
         displayName: body.displayName,
       },
-      { where: { userId: user.id, id: params.id } }
+      {
+        where: { userId: user.id, id: params.id },
+      }
     );
     res.json({ updatedRows });
   } catch (err) {
