@@ -4,9 +4,9 @@ const { messages } = require('../utils/messages');
 
 const checkEmailExists = async (email) => {
   const user = await User.findOne({
-    attributes: ['id'],
     raw: true,
     paranoid: false,
+    attributes: ['id'],
     where: { email },
   });
   if (user) {
@@ -16,9 +16,9 @@ const checkEmailExists = async (email) => {
 
 const checkUsernameExists = async (username) => {
   const user = await User.findOne({
-    attributes: ['id'],
     raw: true,
     paranoid: false,
+    attributes: ['id'],
     where: { username },
   });
   if (user) {
