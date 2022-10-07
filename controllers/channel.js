@@ -49,7 +49,9 @@ const create = async (req, res, next) => {
       writeAPIKey: sequelize.fn('pgp_sym_encrypt', body.writeAPIKey, psw),
       displayName: body.displayName,
     });
-    res.status(201).json(newChannel);
+    req.params['id'] = newChannel.id;
+    res.status(201);
+    next();
   } catch (err) {
     next(err);
   }
@@ -97,7 +99,7 @@ const detail = async (req, res, next) => {
 const update = async (req, res, next) => {
   try {
     const { user, body, params } = req;
-    const [updatedRows] = await Channel.update(
+    await Channel.update(
       {
         readAPIKey: sequelize.fn('pgp_sym_encrypt', body.readAPIKey, psw),
         writeAPIKey: sequelize.fn('pgp_sym_encrypt', body.writeAPIKey, psw),
@@ -107,7 +109,7 @@ const update = async (req, res, next) => {
         where: { userId: user.id, id: params.id },
       }
     );
-    res.json({ updatedRows });
+    next();
   } catch (err) {
     next(err);
   }
