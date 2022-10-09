@@ -5,10 +5,10 @@ const instance = axios.create({
 });
 
 const readDataFromChannel = async (channels) => {
-  const promises = channels.map(({ channelId, readAPIKey }) => {
+  const promises = channels.map(({ channelId, readApiKey }) => {
     const promise = instance.get(`/channels/${channelId}/feeds.json`, {
       params: {
-        api_key: readAPIKey,
+        api_key: readApiKey,
         results: 0,
       },
     });

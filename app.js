@@ -9,7 +9,10 @@ const { passport } = require('./config/passport');
 const { sequelize, Sequelize } = require('./models');
 
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
-const sessionStore = new SequelizeStore({ db: sequelize });
+const sessionStore = new SequelizeStore({
+  db: sequelize,
+  tableName: 'sessions',
+});
 
 // app routing
 const indexRouter = require('./routes/index');

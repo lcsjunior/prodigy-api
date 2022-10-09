@@ -1,57 +1,51 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable('channel', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      roleId: {
+      user_id: {
         type: Sequelize.INTEGER,
         references: {
           model: {
-            tableName: 'Roles',
+            tableName: 'users',
             schema: 'public'
           },
           key: 'id'
         },
         allowNull: false
       },
-      firstName: {
+      channel_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      read_api_key: {
         type: Sequelize.STRING
       },
-      lastName: {
+      write_api_key: {
         type: Sequelize.STRING
       },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
+      display_name: {
+        type: Sequelize.STRING
       },
-      username: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
-      },
-      password: {
-        type: Sequelize.STRING,
-      },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      deletedAt: {
+      deleted_at: {
         type: Sequelize.DATE
       }
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable('channel');
   }
 };

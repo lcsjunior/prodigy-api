@@ -21,11 +21,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       User.belongsTo(models.Role, {
-        foreignKey: 'roleId',
+        foreignKey: 'role_id',
         as: 'roles',
         allowNull: false,
       });
-      User.hasMany(models.Channel, { foreignKey: 'userId', as: 'channels' });
+      User.hasMany(models.Channel, { foreignKey: 'user_id', as: 'channel' });
     }
 
     isValidPassword = async (password) => {
@@ -63,8 +63,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      paranoid: true,
       modelName: 'User',
+      underscored: true,
+      paranoid: true,
     }
   );
   User.beforeSave(async (user, options) => {

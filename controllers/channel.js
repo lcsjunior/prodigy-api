@@ -14,18 +14,18 @@ const list = async (req, res, next) => {
           [
             sequelize.fn(
               'pgp_sym_decrypt',
-              sequelize.cast(sequelize.col('readAPIKey'), 'bytea'),
+              sequelize.cast(sequelize.col('read_api_key'), 'bytea'),
               psw
             ),
-            'readAPIKey',
+            'readApiKey',
           ],
           [
             sequelize.fn(
               'pgp_sym_decrypt',
-              sequelize.cast(sequelize.col('writeAPIKey'), 'bytea'),
+              sequelize.cast(sequelize.col('write_api_key'), 'bytea'),
               psw
             ),
-            'writeAPIKey',
+            'writeApiKey',
           ],
         ],
       },
@@ -45,8 +45,8 @@ const create = async (req, res, next) => {
     const newChannel = await Channel.create({
       userId: user.id,
       channelId: body.channelId,
-      readAPIKey: sequelize.fn('pgp_sym_encrypt', body.readAPIKey, psw),
-      writeAPIKey: sequelize.fn('pgp_sym_encrypt', body.writeAPIKey, psw),
+      readApiKey: sequelize.fn('pgp_sym_encrypt', body.readApiKey, psw),
+      writeApiKey: sequelize.fn('pgp_sym_encrypt', body.writeApiKey, psw),
       displayName: body.displayName,
     });
     req.params['id'] = newChannel.id;
@@ -68,18 +68,18 @@ const detail = async (req, res, next) => {
           [
             sequelize.fn(
               'pgp_sym_decrypt',
-              sequelize.cast(sequelize.col('readAPIKey'), 'bytea'),
+              sequelize.cast(sequelize.col('read_api_key'), 'bytea'),
               psw
             ),
-            'readAPIKey',
+            'readApiKey',
           ],
           [
             sequelize.fn(
               'pgp_sym_decrypt',
-              sequelize.cast(sequelize.col('writeAPIKey'), 'bytea'),
+              sequelize.cast(sequelize.col('write_api_key'), 'bytea'),
               psw
             ),
-            'writeAPIKey',
+            'writeApiKey',
           ],
         ],
       },
@@ -101,8 +101,8 @@ const update = async (req, res, next) => {
     const { user, body, params } = req;
     await Channel.update(
       {
-        readAPIKey: sequelize.fn('pgp_sym_encrypt', body.readAPIKey, psw),
-        writeAPIKey: sequelize.fn('pgp_sym_encrypt', body.writeAPIKey, psw),
+        readApiKey: sequelize.fn('pgp_sym_encrypt', body.readApiKey, psw),
+        writeApiKey: sequelize.fn('pgp_sym_encrypt', body.writeApiKey, psw),
         displayName: body.displayName,
       },
       {

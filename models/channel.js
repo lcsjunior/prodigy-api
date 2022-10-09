@@ -1,6 +1,5 @@
 'use strict';
 const { Model } = require('sequelize');
-
 module.exports = (sequelize, DataTypes) => {
   class Channel extends Model {
     /**
@@ -10,8 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Channel.belongsTo(models.User, {
-        foreignKey: 'userId',
-        as: 'user',
+        foreignKey: 'user_id',
+        as: 'users',
         allowNull: false,
       });
     }
@@ -20,14 +19,15 @@ module.exports = (sequelize, DataTypes) => {
     {
       userId: { type: DataTypes.INTEGER, allowNull: false },
       channelId: { type: DataTypes.INTEGER, allowNull: false },
-      readAPIKey: DataTypes.STRING,
-      writeAPIKey: DataTypes.STRING,
+      readApiKey: DataTypes.STRING,
+      writeApiKey: DataTypes.STRING,
       displayName: DataTypes.STRING,
     },
     {
       sequelize,
-      paranoid: true,
       modelName: 'Channel',
+      tableName: 'channel',
+      underscored: true,
     }
   );
   return Channel;
