@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         as: 'users',
         allowNull: false,
       });
+      Panel.hasMany(models.Widget, { foreignKey: 'panel_id', as: 'widget' });
     }
   }
   Panel.init(
