@@ -36,7 +36,9 @@ const create = async (req, res, next) => {
       name: body.name,
       sortOrder: sortOrder.max + 1,
     });
-    res.status(201).json(newPanel);
+    req.params['id'] = newPanel.id;
+    res.status(201);
+    next();
   } catch (err) {
     next(err);
   }
@@ -77,11 +79,11 @@ const bulkUpdate = async (req, res, next) => {
 const update = async (req, res, next) => {
   try {
     const { user, params, body } = req;
-    const [updatedRows] = await Panel.update(
+    await Panel.update(
       { name: body.name },
       { where: { userId: user.id, id: params.id } }
     );
-    res.json({ updatedRows });
+    next();
   } catch (err) {
     next(err);
   }

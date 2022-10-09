@@ -14,10 +14,10 @@ const { validate } = require('../validators');
 // prettier-ignore
 {
 router.get('/', isAuthenticated, list);
-router.post('/', isAuthenticated, validate('createPanel'), create);
+router.post('/', isAuthenticated, validate('createPanel'), [create, detail]);
 router.get('/:id', isAuthenticated, validate('readPanel'), detail);
 router.patch('/bulk', isAuthenticated, bulkUpdate);
-router.patch('/:id', isAuthenticated, validate('readPanel'), update);
+router.patch('/:id', isAuthenticated, validate('readPanel'), [create, detail]);
 router.delete('/:id', isAuthenticated, validate('readPanel'), remove);
 }
 
