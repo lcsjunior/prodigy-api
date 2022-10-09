@@ -43,7 +43,7 @@ const detail = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   try {
-    const { body, params } = req;
+    const { params, body } = req;
     const [updatedRows] = await User.update(
       {
         firstName: body.firstName,

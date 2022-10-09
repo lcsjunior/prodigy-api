@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       });
       User.hasMany(models.Channel, { foreignKey: 'user_id', as: 'channel' });
+      User.hasMany(models.Panel, { foreignKey: 'user_id', as: 'panel' });
     }
 
     isValidPassword = async (password) => {

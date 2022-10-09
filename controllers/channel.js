@@ -8,7 +8,6 @@ const list = async (req, res, next) => {
     const { user } = req;
     const channels = await Channel.findAll({
       raw: true,
-      nest: true,
       attributes: {
         include: [
           [
@@ -62,7 +61,6 @@ const detail = async (req, res, next) => {
     const { user, params } = req;
     const channel = await Channel.findOne({
       raw: true,
-      nest: true,
       attributes: {
         include: [
           [
@@ -98,16 +96,14 @@ const detail = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   try {
-    const { user, body, params } = req;
+    const { user, params, body } = req;
     await Channel.update(
       {
         readApiKey: sequelize.fn('pgp_sym_encrypt', body.readApiKey, psw),
         writeApiKey: sequelize.fn('pgp_sym_encrypt', body.writeApiKey, psw),
         displayName: body.displayName,
       },
-      {
-        where: { userId: user.id, id: params.id },
-      }
+      { where: { userId: user.id, id: params.id } }
     );
     next();
   } catch (err) {
