@@ -17,7 +17,7 @@ router.get('/', isAuthenticated, list);
 router.post('/', isAuthenticated, validate('createPanel'), [create, detail]);
 router.get('/:id', isAuthenticated, validate('readPanel'), detail);
 router.patch('/bulk', isAuthenticated, bulkUpdate);
-router.patch('/:id', isAuthenticated, validate('readPanel'), [create, detail]);
+router.patch('/:id', isAuthenticated, validate('readPanel'), [update, detail]);
 router.delete('/:id', isAuthenticated, validate('readPanel'), remove);
 }
 
