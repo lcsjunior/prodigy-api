@@ -26,7 +26,9 @@ const create = async (req, res, next) => {
     const newWidget = await Widget.create({
       panelId: query.panelId,
       typeId: body.typeId,
-      displayName: body.name,
+      chId: body.chId,
+      fieldX: body.fieldX,
+      displayName: body.displayName,
     });
     req.params['id'] = newWidget.id;
     res.status(201);
@@ -63,7 +65,14 @@ const detail = async (req, res, next) => {
 const update = async (req, res, next) => {
   try {
     const { params, body } = req;
-    await Widget.update({ name: body.name }, { where: { id: params.id } });
+    await Widget.update(
+      {
+        chId: body.chId,
+        fieldX: body.fieldX,
+        displayName: body.displayName,
+      },
+      { where: { id: params.id } }
+    );
     next();
   } catch (err) {
     next(err);

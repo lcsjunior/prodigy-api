@@ -1,6 +1,20 @@
 const { Panel, sequelize } = require('../models');
 const _ = require('lodash');
 
+const checkPanelOwnership = async (req, res, next) => {
+  const { user, query } = req;
+  const panel = await Panel.findOne({
+    raw: true,
+    attributes: ['id', 'userId'],
+    where: { id: query.panelId, userId: user.id },
+  });
+  if (panel) {
+    next();
+  } else {
+    res.sendStatus(403);
+  }
+};
+
 const list = async (req, res, next) => {
   try {
     const { user } = req;
@@ -102,6 +116,7 @@ const remove = async (req, res, next) => {
 };
 
 module.exports = {
+  checkPanelOwnership,
   list,
   create,
   detail,

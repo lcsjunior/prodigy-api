@@ -1,17 +1,59 @@
 const express = require('express');
+const { body, param } = require('express-validator');
+const { checkPerm } = require('../config/grants');
 const router = express.Router();
 const { isAuthenticated } = require('../config/passport');
-const { list, create, detail, update, remove } = require('../controllers/user');
-const { checkPermission } = require('../permissions');
-const { validate } = require('../validators');
+const { validate } = require('../config/validator');
+const {
+  checkEmailExists,
+  checkUsernameExists,
+  canRead,
+  canReadAll,
+  canUpdate,
+  canDelete,
+  list,
+  create,
+  detail,
+  update,
+  remove,
+} = require('../controllers/user');
 
-// prettier-ignore
-{
-router.get('/', isAuthenticated, checkPermission('readAnyUser'), list);
-router.post('/', isAuthenticated, validate('createUser'), create);
-router.get('/:id', isAuthenticated, checkPermission('readOwnUser'), validate('readUser'), detail);
-router.patch( '/:id', isAuthenticated, checkPermission('updateOwnUser'), validate('updateUser'), update);
-router.delete( '/:id', isAuthenticated, checkPermission('deleteOwnUser'), validate('readUser'), remove);
-}
+router.get(
+  '/', //
+  isAuthenticated,
+  checkPerm(canReadAll),
+  list
+);
+router.post(
+  '/',
+  isAuthenticated,
+  validate([
+    body('email').isEmail().custom(checkEmailExists),
+    body('username').isLength({ min: 6 }).custom(checkUsernameExists),
+    body('password').isLength({ min: 6 }),
+  ]),
+  create
+);
+router.get(
+  '/:id', //
+  isAuthenticated,
+  param('id').isInt().toInt(),
+  checkPerm(canRead),
+  detail
+);
+router.patch(
+  '/:id',
+  isAuthenticated,
+  validate(param('id').isInt().toInt()),
+  checkPerm(canUpdate),
+  update
+);
+router.delete(
+  '/:id', //
+  isAuthenticated,
+  param('id').isInt().toInt(),
+  checkPerm(canDelete),
+  remove
+);
 
 module.exports = router;

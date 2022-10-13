@@ -1,6 +1,9 @@
 const express = require('express');
+const { query, param, body } = require('express-validator');
 const router = express.Router();
 const { isAuthenticated } = require('../config/passport');
+const { validate } = require('../config/validator');
+const { checkPanelOwnership } = require('../controllers/panel');
 const {
   list,
   create,
@@ -8,15 +11,51 @@ const {
   update,
   remove,
 } = require('../controllers/widget');
-const { validate } = require('../validators');
 
-// prettier-ignore
-{
-router.get('/', isAuthenticated, validate('readAllWidget'), list);
-router.post('/', isAuthenticated, validate('createWidget'), [create, detail]);
-router.get('/:id', isAuthenticated, validate('readWidget'), detail);
-router.patch('/:id', isAuthenticated, validate('readWidget'), [update, detail]);
-router.delete('/:id', isAuthenticated, validate('readWidget'), remove);
-}
+router.get(
+  '/',
+  isAuthenticated,
+  query('panelId').isInt().toInt(),
+  checkPanelOwnership,
+  list
+);
+router.post(
+  '/',
+  isAuthenticated,
+  validate([
+    query('panelId').isInt().toInt(),
+    body('typeId').isInt().toInt(),
+    body('chId').isInt().toInt(),
+    body('fieldX').isInt().toInt(),
+  ]),
+  checkPanelOwnership,
+  [create, detail]
+);
+router.get(
+  '/:id',
+  isAuthenticated,
+  validate([param('id').isInt().toInt(), query('panelId').isInt().toInt()]),
+  checkPanelOwnership,
+  detail
+);
+router.patch(
+  '/:id',
+  isAuthenticated,
+  validate([
+    param('id').isInt().toInt(),
+    query('panelId').isInt().toInt(),
+    body('chId').isInt().toInt(),
+    body('fieldX').isInt().toInt(),
+  ]),
+  checkPanelOwnership,
+  [update, detail]
+);
+router.delete(
+  '/:id',
+  isAuthenticated,
+  validate([param('id').isInt().toInt(), query('panelId').isInt().toInt()]),
+  checkPanelOwnership,
+  remove
+);
 
 module.exports = router;

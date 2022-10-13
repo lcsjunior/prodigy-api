@@ -17,6 +17,7 @@ module.exports = {
           },
           key: 'id'
         },
+        onDelete:'CASCADE',
         allowNull: false
       },
       type_id: {
@@ -28,6 +29,21 @@ module.exports = {
           },
           key: 'id'
         },
+        allowNull: false
+      },
+      ch_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'channel',
+            schema: 'public'
+          },
+          key: 'id'
+        },
+        allowNull: false
+      },
+      field_x: {
+        type: Sequelize.INTEGER,
         allowNull: false
       },
       display_name: {

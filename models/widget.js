@@ -18,13 +18,20 @@ module.exports = (sequelize, DataTypes) => {
         as: 'widget_type',
         allowNull: false,
       });
+      Widget.belongsTo(models.WidgetType, {
+        foreignKey: 'ch_id',
+        as: 'channel',
+        allowNull: false,
+      });
     }
   }
   Widget.init(
     {
       panelId: { type: DataTypes.INTEGER, allowNull: false },
       typeId: { type: DataTypes.INTEGER, allowNull: false },
-      displayName: { type: DataTypes.STRING, allowNull: false },
+      chId: { type: DataTypes.INTEGER, allowNull: false },
+      fieldX: { type: DataTypes.INTEGER, allowNull: false },
+      displayName: DataTypes.STRING,
     },
     {
       sequelize,

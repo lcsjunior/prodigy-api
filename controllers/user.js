@@ -1,4 +1,59 @@
 const { User, Role } = require('../models');
+const { ac } = require('../config/grants');
+const { messages } = require('../utils/messages');
+
+const checkEmailExists = async (value) => {
+  const user = await User.findOne({
+    raw: true,
+    paranoid: false,
+    attributes: ['id'],
+    where: { email: value },
+  });
+  if (user) {
+    return Promise.reject(messages.alreadyInUse);
+  }
+};
+
+const checkUsernameExists = async (value) => {
+  const user = await User.findOne({
+    raw: true,
+    paranoid: false,
+    attributes: ['id'],
+    where: { username: value },
+  });
+  if (user) {
+    return Promise.reject(messages.alreadyInUse);
+  }
+};
+
+const canReadAll = ({ user }) => {
+  const permission = ac.can(user.role).readAny('users');
+  return permission.granted;
+};
+
+const canRead = ({ user, params }) => {
+  const permission =
+    user.id == params.id
+      ? ac.can(user.role).readOwn('users')
+      : ac.can(user.role).readAny('users');
+  return permission.granted;
+};
+
+const canUpdate = ({ user, params }) => {
+  const permission =
+    user.id == params.id
+      ? ac.can(user.role).updateOwn('users')
+      : ac.can(user.role).updateAny('users');
+  return permission.granted;
+};
+
+const canDelete = ({ user, params }) => {
+  const permission =
+    user.id == params.id
+      ? ac.can(user.role).deleteOwn('users')
+      : ac.can(user.role).deleteAny('users');
+  return permission.granted;
+};
 
 const list = async (req, res, next) => {
   try {
@@ -48,7 +103,6 @@ const update = async (req, res, next) => {
       {
         firstName: body.firstName,
         lastName: body.lastName,
-        password: body.password,
       },
       { where: { id: params.id }, individualHooks: true }
     );
@@ -69,6 +123,12 @@ const remove = async (req, res, next) => {
 };
 
 module.exports = {
+  checkEmailExists,
+  checkUsernameExists,
+  canReadAll,
+  canRead,
+  canUpdate,
+  canDelete,
   list,
   create,
   detail,

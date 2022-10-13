@@ -1,6 +1,8 @@
 const express = require('express');
+const { body, param } = require('express-validator');
 const router = express.Router();
 const { isAuthenticated } = require('../config/passport');
+const { validate } = require('../config/validator');
 const {
   list,
   create,
@@ -8,15 +10,33 @@ const {
   update,
   remove,
 } = require('../controllers/channel');
-const { validate } = require('../validators');
 
-// prettier-ignore
-{
-router.get('/', isAuthenticated, list);
-router.post('/', isAuthenticated, validate('createChannel'), [create, detail]);
-router.get('/:id', isAuthenticated, validate('readChannel'), detail);
-router.patch('/:id', isAuthenticated, validate('readChannel'), [update, detail]);
-router.delete('/:id', isAuthenticated, validate('readChannel'), remove);
-}
+router.get(
+  '/', //
+  isAuthenticated,
+  list
+);
+router.post('/', isAuthenticated, validate(body('channelId').isInt().toInt()), [
+  create,
+  detail,
+]);
+router.get(
+  '/:id', //
+  isAuthenticated,
+  param('id').isInt().toInt(),
+  detail
+);
+router.patch(
+  '/:id', //
+  isAuthenticated,
+  param('id').isInt().toInt(),
+  [update, detail]
+);
+router.delete(
+  '/:id', //
+  isAuthenticated,
+  param('id').isInt().toInt(),
+  remove
+);
 
 module.exports = router;
