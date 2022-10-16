@@ -1,5 +1,8 @@
 const { Channel, sequelize } = require('../models');
-const { readDataFromChannel } = require('../libs/thingspeak-api');
+const {
+  readChannelData,
+  readChannelLastEntry,
+} = require('../libs/thingspeak-api');
 
 const psw = process.env.PGP_SYM_KEY;
 
@@ -31,7 +34,7 @@ const list = async (req, res, next) => {
       where: { userId: user.id },
       order: [['id', 'ASC']],
     });
-    const data = await readDataFromChannel(channels);
+    const data = await readChannelLastEntry(channels);
     res.json(data);
   } catch (err) {
     next(err);
@@ -84,7 +87,7 @@ const detail = async (req, res, next) => {
       where: { userId: user.id, id: params.id },
     });
     if (channel) {
-      const data = await readDataFromChannel([channel]);
+      const data = await readChannelData([channel]);
       res.json(data[0]);
     } else {
       res.sendStatus(204);

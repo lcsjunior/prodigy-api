@@ -10,10 +10,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Panel.belongsTo(models.User, {
         foreignKey: 'user_id',
-        as: 'users',
         allowNull: false,
       });
-      Panel.hasMany(models.Widget, { foreignKey: 'panel_id', as: 'widget' });
+      Panel.hasMany(models.Widget, { foreignKey: 'panel_id', as: 'widgets' });
     }
   }
   Panel.init(

@@ -15,7 +15,7 @@ const {
 router.get(
   '/',
   isAuthenticated,
-  query('panelId').isInt().toInt(),
+  validate(query('panelId').isInt().toInt()),
   checkPanelOwnership,
   list
 );

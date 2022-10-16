@@ -37,7 +37,7 @@ router.post(
 router.get(
   '/:id', //
   isAuthenticated,
-  param('id').isInt().toInt(),
+  validate(param('id').isInt().toInt()),
   checkPerm(canRead),
   detail
 );
@@ -51,7 +51,7 @@ router.patch(
 router.delete(
   '/:id', //
   isAuthenticated,
-  param('id').isInt().toInt(),
+  validate(param('id').isInt().toInt()),
   checkPerm(canDelete),
   remove
 );

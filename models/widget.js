@@ -10,15 +10,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Widget.belongsTo(models.Panel, {
         foreignKey: 'panel_id',
-        as: 'panel',
         allowNull: false,
       });
       Widget.belongsTo(models.WidgetType, {
         foreignKey: 'type_id',
-        as: 'widget_type',
+        as: 'type',
         allowNull: false,
       });
-      Widget.belongsTo(models.WidgetType, {
+      Widget.belongsTo(models.Channel, {
         foreignKey: 'ch_id',
         as: 'channel',
         allowNull: false,

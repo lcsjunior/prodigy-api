@@ -15,9 +15,9 @@ passport.deserializeUser(async (id, done) => {
       'username',
       'firstName',
       'lastName',
-      [Sequelize.literal('"roles"."slug"'), 'role'],
+      [Sequelize.literal('"role"."slug"'), 'role'],
     ],
-    include: [{ model: Role, as: 'roles', required: true, attributes: [] }],
+    include: [{ model: Role, as: 'role', required: true, attributes: [] }],
   });
   if (user?.id === id) {
     done(null, user.toJSON());

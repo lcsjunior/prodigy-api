@@ -2,6 +2,7 @@ const express = require('express');
 const { body, param } = require('express-validator');
 const router = express.Router();
 const { isAuthenticated } = require('../config/passport');
+const { validate } = require('../config/validator');
 const {
   list,
   create,
@@ -19,13 +20,13 @@ router.get(
 router.post(
   '/', //
   isAuthenticated,
-  body('name').not().isEmpty(),
+  validate(body('name').not().isEmpty()),
   [create, detail]
 );
 router.get(
   '/:id', //
   isAuthenticated,
-  param('id').isInt().toInt(),
+  validate(param('id').isInt().toInt()),
   detail
 );
 router.patch(
@@ -36,13 +37,13 @@ router.patch(
 router.patch(
   '/:id', //
   isAuthenticated,
-  param('id').isInt().toInt(),
+  validate(param('id').isInt().toInt()),
   [update, detail]
 );
 router.delete(
   '/:id', //
   isAuthenticated,
-  param('id').isInt().toInt(),
+  validate(param('id').isInt().toInt()),
   remove
 );
 

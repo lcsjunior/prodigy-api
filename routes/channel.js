@@ -23,19 +23,19 @@ router.post('/', isAuthenticated, validate(body('channelId').isInt().toInt()), [
 router.get(
   '/:id', //
   isAuthenticated,
-  param('id').isInt().toInt(),
+  validate(param('id').isInt().toInt()),
   detail
 );
 router.patch(
   '/:id', //
   isAuthenticated,
-  param('id').isInt().toInt(),
+  validate(param('id').isInt().toInt()),
   [update, detail]
 );
 router.delete(
   '/:id', //
   isAuthenticated,
-  param('id').isInt().toInt(),
+  validate(param('id').isInt().toInt()),
   remove
 );
 

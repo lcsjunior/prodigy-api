@@ -1,4 +1,4 @@
-version: "3.9"
+version: '3.9'
 services:
   database:
     image: postgres:latest
@@ -10,5 +10,7 @@ services:
     ports:
       - '5438:5432'
     volumes:
-      - /opt/prodigy-api/postgres-data:/var/lib/postgresql/data
+      - prodigy-data-vol:/var/lib/postgresql/data
       - ./db/sql/install-extensions.sql:/docker-entrypoint-initdb.d/install-extensions.sql
+volumes:
+  prodigy-data-vol:

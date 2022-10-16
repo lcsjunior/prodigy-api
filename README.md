@@ -2,7 +2,7 @@
 
 ## Useful commands
 
-Docker begin:
+Start Compose:
 
 ```bash
 docker-compose up -d
@@ -19,12 +19,17 @@ Install packages and migrate all:
 ```bash
 npm install
 npm run prepare
-npx sequelize-cli db:migrate
-npx sequelize-cli db:seed:all
+npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all
 ```
 
 Start development mode:
 
 ```bash
 npm start
+```
+
+Dispose Compose:
+
+```bash
+docker-compose down -v
 ```

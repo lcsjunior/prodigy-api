@@ -10,9 +10,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Channel.belongsTo(models.User, {
         foreignKey: 'user_id',
-        as: 'users',
         allowNull: false,
       });
+      Channel.hasMany(models.Widget, { foreignKey: 'ch_id' });
     }
   }
   Channel.init(

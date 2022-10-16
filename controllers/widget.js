@@ -8,7 +8,6 @@ const list = async (req, res, next) => {
       include: [
         {
           model: Panel,
-          as: 'panel',
           attributes: [],
           where: { userId: user.id },
         },
@@ -46,7 +45,6 @@ const detail = async (req, res, next) => {
       include: [
         {
           model: Panel,
-          as: 'panel',
           attributes: [],
           where: { userId: user.id },
         },

@@ -22,11 +22,11 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       User.belongsTo(models.Role, {
         foreignKey: 'role_id',
-        as: 'roles',
+        as: 'role',
         allowNull: false,
       });
-      User.hasMany(models.Channel, { foreignKey: 'user_id', as: 'channel' });
-      User.hasMany(models.Panel, { foreignKey: 'user_id', as: 'panel' });
+      User.hasMany(models.Channel, { foreignKey: 'user_id' });
+      User.hasMany(models.Panel, { foreignKey: 'user_id' });
     }
 
     isValidPassword = async (password) => {

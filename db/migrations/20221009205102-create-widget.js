@@ -6,60 +6,61 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       panel_id: {
         type: Sequelize.INTEGER,
         references: {
           model: {
             tableName: 'panel',
-            schema: 'public'
+            schema: 'public',
           },
-          key: 'id'
+          key: 'id',
         },
-        onDelete:'CASCADE',
-        allowNull: false
+        onDelete: 'CASCADE',
+        allowNull: false,
       },
       type_id: {
         type: Sequelize.INTEGER,
         references: {
           model: {
             tableName: 'widget_type',
-            schema: 'public'
+            schema: 'public',
           },
-          key: 'id'
+          key: 'id',
         },
-        allowNull: false
+        allowNull: false,
       },
       ch_id: {
         type: Sequelize.INTEGER,
         references: {
           model: {
             tableName: 'channel',
-            schema: 'public'
+            schema: 'public',
           },
-          key: 'id'
+          key: 'id',
         },
-        allowNull: false
+        onDelete: 'CASCADE',
+        allowNull: false,
       },
       field_x: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       display_name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('widget');
-  }
+  },
 };

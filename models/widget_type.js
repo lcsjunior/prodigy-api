@@ -10,7 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       WidgetType.hasMany(models.Widget, {
         foreignKey: 'type_id',
-        as: 'widget',
       });
     }
   }
