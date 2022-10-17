@@ -1,16 +1,20 @@
 'use strict';
-const { Op } = require("sequelize");
+const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
 
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    const saRoleId = await queryInterface.rawSelect('roles', {
-      where: {
-        slug: 'sa',
+  async up(queryInterface, Sequelize) {
+    const saRoleId = await queryInterface.rawSelect(
+      'roles',
+      {
+        where: {
+          slug: 'sa',
+        },
       },
-    }, ['id']);
+      ['id']
+    );
     const hash = await bcrypt.hash(process.env.SA_PASS, saltRounds);
     return queryInterface.bulkInsert('users', [
       {
@@ -26,7 +30,11 @@ module.exports = {
     ]);
   },
 
-  async down (queryInterface, Sequelize) {
-    return queryInterface.bulkDelete('users', {username: {[Op.eq]: 'sa'}}, {});
-  }
+  async down(queryInterface, Sequelize) {
+    return queryInterface.bulkDelete(
+      'users',
+      { username: { [Op.eq]: 'sa' } },
+      {}
+    );
+  },
 };

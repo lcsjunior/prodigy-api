@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'WidgetType',
       tableName: 'widget_type',
       underscored: true,
+      paranoid: true,
     }
   );
   return WidgetType;

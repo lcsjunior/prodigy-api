@@ -50,6 +50,27 @@ module.exports = {
       display_name: {
         type: Sequelize.STRING,
       },
+      suffix: {
+        type: Sequelize.STRING,
+      },
+      range_min: {
+        type: Sequelize.FLOAT,
+      },
+      range_max: {
+        type: Sequelize.FLOAT,
+      },
+      x: {
+        type: Sequelize.INTEGER,
+      },
+      y: {
+        type: Sequelize.INTEGER,
+      },
+      h: {
+        type: Sequelize.INTEGER,
+      },
+      w: {
+        type: Sequelize.INTEGER,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

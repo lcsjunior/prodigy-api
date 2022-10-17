@@ -41,11 +41,18 @@ const detail = async (req, res, next) => {
         )
       );
       const result = await readChannelLastEntry(channels);
+      // Widget serializer
       const serialized = panel.toJSON();
       const widgets = serialized.widgets.map((widget) => {
         const foundChannel = result.find(
           (item) => item.channelId === widget.channel.channelId
         );
+        const feeds = foundChannel?.feeds
+          .filter((feed) => `field${widget.fieldX}` in feed)
+          .map((feed) => ({
+            x: feed.created_at,
+            y: feed[`field${widget.fieldX}`],
+          }));
         return {
           id: widget.id,
           type: widget.type,
@@ -53,11 +60,12 @@ const detail = async (req, res, next) => {
             widget.displayName || foundChannel?.chData[`field${widget.fieldX}`],
           lastValue: foundChannel?.lastEntry[`field${widget.fieldX}`],
           lastUpdated: foundChannel?.lastEntry.created_at,
+          feeds,
         };
       });
       return res.json({
         ...serialized,
-        widgets,
+        widgets: _.orderBy(widgets, 'id'),
       });
     } else {
       res.sendStatus(204);
