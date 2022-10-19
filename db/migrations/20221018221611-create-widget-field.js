@@ -1,30 +1,24 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('panel', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
+    await queryInterface.createTable('widget_field', {
+      widget_id: {
+        type: Sequelize.INTEGER,
         primaryKey: true,
-        type: Sequelize.INTEGER,
-      },
-      user_id: {
-        type: Sequelize.INTEGER,
         references: {
           model: {
-            tableName: 'users',
+            tableName: 'widget',
             schema: 'public',
           },
           key: 'id',
         },
+        onDelete: 'CASCADE',
         allowNull: false,
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      sort_order: {
+      field_id: {
         type: Sequelize.INTEGER,
+        primaryKey: true,
+        allowNull: false,
       },
       created_at: {
         allowNull: false,
@@ -37,6 +31,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('panel');
+    await queryInterface.dropTable('widget_field');
   },
 };

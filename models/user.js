@@ -7,7 +7,6 @@ const saltRounds = 10;
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     toJSON() {
-      // hide protected fields
       const attributes = Object.assign({}, this.get());
       for (const i of ['password']) {
         delete attributes[i];
@@ -26,7 +25,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       });
       User.hasMany(models.Channel, { foreignKey: 'user_id' });
-      User.hasMany(models.Panel, { foreignKey: 'user_id' });
     }
 
     isValidPassword = async (password) => {

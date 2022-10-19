@@ -1,32 +1,30 @@
 'use strict';
 const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Panel extends Model {
+  class WidgetField extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Panel.belongsTo(models.User, {
-        foreignKey: 'user_id',
+      WidgetField.belongsTo(models.Widget, {
+        foreignKey: 'widget_id',
         allowNull: false,
       });
-      Panel.hasMany(models.Widget, { foreignKey: 'panel_id', as: 'widgets' });
     }
   }
-  Panel.init(
+  WidgetField.init(
     {
-      userId: { type: DataTypes.INTEGER, allowNull: false },
-      name: { type: DataTypes.STRING, allowNull: false },
-      sortOrder: DataTypes.INTEGER,
+      widgetId: { type: DataTypes.INTEGER, primaryKey: true, allowNull: false },
+      fieldId: { type: DataTypes.INTEGER, primaryKey: true, allowNull: false },
     },
     {
       sequelize,
-      modelName: 'Panel',
-      tableName: 'panel',
+      modelName: 'WidgetField',
+      tableName: 'widget_field',
       underscored: true,
     }
   );
-  return Panel;
+  return WidgetField;
 };

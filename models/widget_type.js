@@ -24,17 +24,12 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       sortOrder: DataTypes.INTEGER,
-      isInput: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-      },
     },
     {
       sequelize,
       modelName: 'WidgetType',
       tableName: 'widget_type',
       underscored: true,
-      paranoid: true,
     }
   );
   return WidgetType;

@@ -19,10 +19,6 @@ module.exports = {
       sort_order: {
         type: Sequelize.INTEGER,
       },
-      is_input: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
-      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

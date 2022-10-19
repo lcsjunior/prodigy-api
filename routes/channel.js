@@ -9,6 +9,7 @@ const {
   detail,
   update,
   remove,
+  bulkUpdate,
 } = require('../controllers/channel');
 
 router.get(
@@ -25,6 +26,11 @@ router.get(
   isAuthenticated,
   validate(param('id').isInt().toInt()),
   detail
+);
+router.patch(
+  '/bulk', //
+  isAuthenticated,
+  bulkUpdate
 );
 router.patch(
   '/:id', //

@@ -1,15 +1,22 @@
-const { Panel, Widget } = require('../models');
+const { Op } = require('sequelize');
+const { Channel, Widget, WidgetField } = require('../models');
 
 const list = async (req, res, next) => {
   try {
     const { user, query } = req;
     const widgets = await Widget.findAll({
-      where: { panelId: query.panelId },
+      where: { chId: query.chId },
       include: [
         {
-          model: Panel,
+          model: Channel,
           attributes: [],
           where: { userId: user.id },
+        },
+        {
+          model: WidgetField,
+          as: 'fields',
+          attributes: ['fieldId'],
+          require: true,
         },
       ],
     });
@@ -23,12 +30,15 @@ const create = async (req, res, next) => {
   try {
     const { query, body } = req;
     const newWidget = await Widget.create({
-      panelId: query.panelId,
       typeId: body.typeId,
-      chId: body.chId,
-      fieldX: body.fieldX,
+      chId: query.chId,
       displayName: body.displayName,
     });
+    const fields = body.fields.map((i) => ({
+      widgetId: newWidget.id,
+      fieldId: i,
+    }));
+    await WidgetField.bulkCreate(fields);
     req.params['id'] = newWidget.id;
     res.status(201);
     next();
@@ -44,9 +54,15 @@ const detail = async (req, res, next) => {
       where: { id: params.id },
       include: [
         {
-          model: Panel,
+          model: Channel,
           attributes: [],
           where: { userId: user.id },
+        },
+        {
+          model: WidgetField,
+          as: 'fields',
+          attributes: ['fieldId'],
+          require: true,
         },
       ],
     });
@@ -66,11 +82,23 @@ const update = async (req, res, next) => {
     await Widget.update(
       {
         chId: body.chId,
-        fieldX: body.fieldX,
         displayName: body.displayName,
       },
       { where: { id: params.id } }
     );
+    await WidgetField.destroy({
+      where: {
+        widgetId: params.id,
+        fieldId: { [Op.notIn]: body.fields },
+      },
+    });
+    const fields = body.fields.map((i) => ({
+      widgetId: params.id,
+      fieldId: i,
+    }));
+    await WidgetField.bulkCreate(fields, {
+      ignoreDuplicates: true,
+    });
     next();
   } catch (err) {
     next(err);

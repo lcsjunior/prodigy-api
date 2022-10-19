@@ -8,29 +8,26 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Widget.belongsTo(models.Panel, {
-        foreignKey: 'panel_id',
+      Widget.belongsTo(models.Channel, {
+        foreignKey: 'ch_id',
         allowNull: false,
       });
       Widget.belongsTo(models.WidgetType, {
         foreignKey: 'type_id',
-        as: 'type',
         allowNull: false,
       });
-      Widget.belongsTo(models.Channel, {
-        foreignKey: 'ch_id',
-        as: 'channel',
-        allowNull: false,
+      Widget.hasMany(models.WidgetField, {
+        foreignKey: 'widget_id',
+        as: 'fields',
       });
     }
   }
   Widget.init(
     {
-      panelId: { type: DataTypes.INTEGER, allowNull: false },
-      typeId: { type: DataTypes.INTEGER, allowNull: false },
       chId: { type: DataTypes.INTEGER, allowNull: false },
-      fieldX: { type: DataTypes.INTEGER, allowNull: false },
+      typeId: { type: DataTypes.INTEGER, allowNull: false },
       displayName: DataTypes.STRING,
+      sortOrder: DataTypes.INTEGER,
     },
     {
       sequelize,

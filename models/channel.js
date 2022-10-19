@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'user_id',
         allowNull: false,
       });
-      Channel.hasMany(models.Widget, { foreignKey: 'ch_id' });
+      Channel.hasMany(models.Widget, { foreignKey: 'ch_id', as: 'widgets' });
     }
   }
   Channel.init(
@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       readApiKey: DataTypes.STRING,
       writeApiKey: DataTypes.STRING,
       displayName: DataTypes.STRING,
+      sortOrder: DataTypes.INTEGER,
     },
     {
       sequelize,

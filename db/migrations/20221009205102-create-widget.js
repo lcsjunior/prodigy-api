@@ -8,18 +8,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      panel_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: {
-            tableName: 'panel',
-            schema: 'public',
-          },
-          key: 'id',
-        },
-        onDelete: 'CASCADE',
-        allowNull: false,
-      },
       type_id: {
         type: Sequelize.INTEGER,
         references: {
@@ -43,33 +31,14 @@ module.exports = {
         onDelete: 'CASCADE',
         allowNull: false,
       },
-      field_x: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
       display_name: {
         type: Sequelize.STRING,
       },
+      sort_order: {
+        type: Sequelize.INTEGER,
+      },
       suffix: {
         type: Sequelize.STRING,
-      },
-      range_min: {
-        type: Sequelize.FLOAT,
-      },
-      range_max: {
-        type: Sequelize.FLOAT,
-      },
-      x: {
-        type: Sequelize.INTEGER,
-      },
-      y: {
-        type: Sequelize.INTEGER,
-      },
-      h: {
-        type: Sequelize.INTEGER,
-      },
-      w: {
-        type: Sequelize.INTEGER,
       },
       created_at: {
         allowNull: false,

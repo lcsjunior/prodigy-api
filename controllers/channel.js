@@ -1,10 +1,28 @@
-const { Channel, sequelize } = require('../models');
-const {
-  readChannelData,
-  readChannelLastEntry,
-} = require('../libs/thingspeak-api');
+const { Channel, Widget, sequelize } = require('../models');
+const { readChannelData } = require('../libs/thingspeak-api');
+const _ = require('lodash');
 
 const psw = process.env.PGP_SYM_KEY;
+
+const checkFieldNumber = async (value) => {
+  if (value.length === 0 || value.find((val) => val < 1 || val > 8)) {
+    return Promise.reject();
+  }
+};
+
+const isOwnerChannel = async (req, res, next) => {
+  const { user, query } = req;
+  const channel = await Channel.findOne({
+    raw: true,
+    attributes: ['id', 'userId'],
+    where: { id: query.chId, userId: user.id },
+  });
+  if (channel) {
+    next();
+  } else {
+    res.sendStatus(403);
+  }
+};
 
 const list = async (req, res, next) => {
   try {
@@ -32,9 +50,9 @@ const list = async (req, res, next) => {
         ],
       },
       where: { userId: user.id },
-      order: [['id', 'ASC']],
+      order: [['sortOrder', 'ASC']],
     });
-    const data = await readChannelLastEntry(channels);
+    const data = await readChannelData(channels);
     res.json(data);
   } catch (err) {
     next(err);
@@ -44,12 +62,27 @@ const list = async (req, res, next) => {
 const create = async (req, res, next) => {
   try {
     const { user, body } = req;
+    const sortOrder = await Channel.findOne({
+      raw: true,
+      attributes: [
+        [
+          sequelize.fn(
+            'coalesce',
+            sequelize.fn('max', sequelize.col('sort_order')),
+            0
+          ),
+          'max',
+        ],
+      ],
+      where: { userId: user.id },
+    });
     const newChannel = await Channel.create({
       userId: user.id,
       channelId: body.channelId,
       readApiKey: sequelize.fn('pgp_sym_encrypt', body.readApiKey, psw),
       writeApiKey: sequelize.fn('pgp_sym_encrypt', body.writeApiKey, psw),
       displayName: body.displayName,
+      sortOrder: sortOrder.max + 1,
     });
     req.params['id'] = newChannel.id;
     res.status(201);
@@ -63,7 +96,6 @@ const detail = async (req, res, next) => {
   try {
     const { user, params } = req;
     const channel = await Channel.findOne({
-      raw: true,
       attributes: {
         include: [
           [
@@ -84,14 +116,39 @@ const detail = async (req, res, next) => {
           ],
         ],
       },
+      include: [
+        {
+          model: Widget,
+          as: 'widgets',
+        },
+      ],
       where: { userId: user.id, id: params.id },
     });
     if (channel) {
-      const data = await readChannelData([channel]);
+      req.session.channelId = channel.channelId;
+      req.session.readApiKey = channel.readApiKey;
+      const serialized = channel.toJSON();
+      const data = await readChannelData([serialized]);
       res.json(data[0]);
     } else {
       res.sendStatus(204);
     }
+  } catch (err) {
+    next(err);
+  }
+};
+
+const bulkUpdate = async (req, res, next) => {
+  try {
+    const { user, body } = req;
+    const statements = body.map(({ id }, index) => {
+      return Channel.update(
+        { sortOrder: index + 1 },
+        { where: { userId: user.id, id } }
+      );
+    });
+    const result = await Promise.all(statements);
+    res.json(_.flatten(result));
   } catch (err) {
     next(err);
   }
@@ -127,9 +184,12 @@ const remove = async (req, res, next) => {
 };
 
 module.exports = {
+  checkFieldNumber,
+  isOwnerChannel,
   list,
   create,
   detail,
+  bulkUpdate,
   update,
   remove,
 };
