@@ -10,6 +10,7 @@ const {
   update,
   remove,
   bulkUpdate,
+  readFeeds,
 } = require('../controllers/channel');
 
 router.get(
@@ -43,6 +44,12 @@ router.delete(
   isAuthenticated,
   validate(param('id').isInt().toInt()),
   remove
+);
+router.get(
+  '/:id/feeds', //
+  isAuthenticated,
+  validate(param('id').isInt().toInt()),
+  readFeeds
 );
 
 module.exports = router;

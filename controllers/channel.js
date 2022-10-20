@@ -1,8 +1,26 @@
-const { Channel, Widget, sequelize } = require('../models');
-const { readChannelData } = require('../libs/thingspeak-api');
+const { Channel, sequelize } = require('../models');
+const { readChannelData, readChannelFeeds } = require('../libs/thingspeak-api');
 const _ = require('lodash');
 
 const psw = process.env.PGP_SYM_KEY;
+
+const readApiKeyField = [
+  sequelize.fn(
+    'pgp_sym_decrypt',
+    sequelize.cast(sequelize.col('read_api_key'), 'bytea'),
+    psw
+  ),
+  'readApiKey',
+];
+
+const writeApiKeyField = [
+  sequelize.fn(
+    'pgp_sym_decrypt',
+    sequelize.cast(sequelize.col('write_api_key'), 'bytea'),
+    psw
+  ),
+  'writeApiKey',
+];
 
 const checkFieldNumber = async (value) => {
   if (value.length === 0 || value.find((val) => val < 1 || val > 8)) {
@@ -30,24 +48,7 @@ const list = async (req, res, next) => {
     const channels = await Channel.findAll({
       raw: true,
       attributes: {
-        include: [
-          [
-            sequelize.fn(
-              'pgp_sym_decrypt',
-              sequelize.cast(sequelize.col('read_api_key'), 'bytea'),
-              psw
-            ),
-            'readApiKey',
-          ],
-          [
-            sequelize.fn(
-              'pgp_sym_decrypt',
-              sequelize.cast(sequelize.col('write_api_key'), 'bytea'),
-              psw
-            ),
-            'writeApiKey',
-          ],
-        ],
+        include: [readApiKeyField, writeApiKeyField],
       },
       where: { userId: user.id },
       order: [['sortOrder', 'ASC']],
@@ -97,36 +98,11 @@ const detail = async (req, res, next) => {
     const { user, params } = req;
     const channel = await Channel.findOne({
       attributes: {
-        include: [
-          [
-            sequelize.fn(
-              'pgp_sym_decrypt',
-              sequelize.cast(sequelize.col('read_api_key'), 'bytea'),
-              psw
-            ),
-            'readApiKey',
-          ],
-          [
-            sequelize.fn(
-              'pgp_sym_decrypt',
-              sequelize.cast(sequelize.col('write_api_key'), 'bytea'),
-              psw
-            ),
-            'writeApiKey',
-          ],
-        ],
+        include: [readApiKeyField, writeApiKeyField],
       },
-      include: [
-        {
-          model: Widget,
-          as: 'widgets',
-        },
-      ],
       where: { userId: user.id, id: params.id },
     });
     if (channel) {
-      req.session.channelId = channel.channelId;
-      req.session.readApiKey = channel.readApiKey;
       const serialized = channel.toJSON();
       const data = await readChannelData([serialized]);
       res.json(data[0]);
@@ -183,6 +159,28 @@ const remove = async (req, res, next) => {
   }
 };
 
+const readFeeds = async (req, res, next) => {
+  try {
+    const { user, params, query } = req;
+    const channel = await Channel.findOne({
+      raw: true,
+      attributes: ['channelId', readApiKeyField],
+      where: { userId: user.id, id: params.id },
+    });
+    if (channel) {
+      const result = await readChannelFeeds([channel], {
+        results: query.results,
+        timescale: query.timescale,
+      });
+      res.json(result);
+    } else {
+      res.sendStatus(204);
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   checkFieldNumber,
   isOwnerChannel,
@@ -192,4 +190,5 @@ module.exports = {
   bulkUpdate,
   update,
   remove,
+  readFeeds,
 };

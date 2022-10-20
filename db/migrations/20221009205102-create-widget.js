@@ -37,9 +37,6 @@ module.exports = {
       sort_order: {
         type: Sequelize.INTEGER,
       },
-      suffix: {
-        type: Sequelize.STRING,
-      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,
