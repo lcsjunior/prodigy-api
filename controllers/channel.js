@@ -171,8 +171,9 @@ const readFeeds = async (req, res, next) => {
       const result = await readChannelFeeds([channel], {
         results: query.results,
         timescale: query.timescale,
+        round: query.round,
       });
-      res.json(result);
+      res.json(result[0].feeds);
     } else {
       res.sendStatus(204);
     }

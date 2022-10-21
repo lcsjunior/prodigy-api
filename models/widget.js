@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       Widget.belongsTo(models.WidgetType, {
         foreignKey: 'type_id',
+        as: 'type',
         allowNull: false,
       });
       Widget.hasMany(models.WidgetField, {

@@ -11,7 +11,7 @@ const prepareEntryData = (obj = {}) => {
     if (key.substring(0, 5) === 'field') {
       obj[key] = _.toNumber(obj[key]);
     } else if (key === 'created_at') {
-      obj[key] = parseISO(obj[key]).getTime();
+      obj[key] = Math.floor(parseISO(obj[key]).getTime() / 1000);
     }
   }
   return obj;
@@ -36,10 +36,10 @@ const readChannelData = async (channels) => {
     return acc;
   }, []);
   return channels.map((channel) => {
-    const chData = reduced.find((item) => item.id === channel.channelId);
+    const data = reduced.find((item) => item.id === channel.channelId);
     return {
       ...channel,
-      chData,
+      data,
     };
   });
 };
@@ -63,13 +63,10 @@ const readChannelFeeds = async (channels, params) => {
     return acc;
   }, []);
   return channels.map((channel) => {
-    const chData = reduced.find(
-      (item) => item.channel.id === channel.channelId
-    );
+    const data = reduced.find((item) => item.channel.id === channel.channelId);
     return {
-      ...channel,
-      chData: chData?.channel,
-      feeds: chData?.feeds.map(prepareEntryData),
+      data: data?.channel,
+      feeds: data?.feeds.map(prepareEntryData),
     };
   });
 };

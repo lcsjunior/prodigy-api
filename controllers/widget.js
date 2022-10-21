@@ -1,5 +1,5 @@
 const { Op } = require('sequelize');
-const { Channel, Widget, WidgetField } = require('../models');
+const { Channel, Widget, WidgetType, WidgetField } = require('../models');
 
 const list = async (req, res, next) => {
   try {
@@ -17,6 +17,11 @@ const list = async (req, res, next) => {
           as: 'fields',
           attributes: ['fieldId'],
           require: true,
+        },
+        {
+          model: WidgetType,
+          as: 'type',
+          attributes: ['slug'],
         },
       ],
     });
@@ -63,6 +68,11 @@ const detail = async (req, res, next) => {
           as: 'fields',
           attributes: ['fieldId'],
           require: true,
+        },
+        {
+          model: WidgetType,
+          as: 'type',
+          attributes: ['slug'],
         },
       ],
     });
