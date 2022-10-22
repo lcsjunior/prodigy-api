@@ -167,16 +167,12 @@ const readFeeds = async (req, res, next) => {
       attributes: ['channelId', readApiKeyField],
       where: { userId: user.id, id: params.id },
     });
-    if (channel) {
-      const result = await readChannelFeeds([channel], {
-        results: query.results,
-        timescale: query.timescale,
-        round: query.round,
-      });
-      res.json(result[0].feeds);
-    } else {
-      res.sendStatus(204);
-    }
+    const result = await readChannelFeeds([channel], {
+      results: query.results,
+      timescale: query.timescale,
+      round: query.round,
+    });
+    res.json(result[0].feeds || []);
   } catch (err) {
     next(err);
   }
