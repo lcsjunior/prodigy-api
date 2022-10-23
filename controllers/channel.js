@@ -214,10 +214,10 @@ const eventsHandler = (req, res, next) => {
       }
     }
   };
-  const interval = setInterval(feedData, 5000);
+  const intervalId = setInterval(feedData, 5000);
 
   req.on('close', () => {
-    clearInterval(interval);
+    clearInterval(intervalId);
     console.log('Connection closed');
   });
 };
