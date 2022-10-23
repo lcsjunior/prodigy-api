@@ -35,7 +35,8 @@
     "passport-local": "^1.0.0",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.24.0"
+    "sequelize": "^6.24.0",
+    "sleep-promise": "^9.1.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.1.2",

@@ -1,6 +1,11 @@
 const { Channel, sequelize } = require('../models');
-const { readChannelData, readChannelFeeds } = require('../libs/thingspeak-api');
+const {
+  readChannelData,
+  readChannelFeeds,
+  readChannelLastEntry,
+} = require('../libs/thingspeak-api');
 const _ = require('lodash');
+const { isDev } = require('../utils/current-env');
 
 const psw = process.env.PGP_SYM_KEY;
 
@@ -171,11 +176,50 @@ const readFeeds = async (req, res, next) => {
       results: query.results,
       timescale: query.timescale,
       round: query.round,
+      days: 30,
     });
     res.json(result[0].feeds || []);
   } catch (err) {
     next(err);
   }
+};
+
+const eventsHandler = (req, res, next) => {
+  const headers = {
+    'Content-Type': 'text/event-stream',
+    Connection: 'keep-alive',
+    'Cache-Control': 'no-cache',
+  };
+  res.writeHead(200, headers);
+
+  const { user, params } = req;
+
+  const feedData = async () => {
+    let channel;
+    if (!channel) {
+      channel = await Channel.findOne({
+        raw: true,
+        attributes: ['channelId', readApiKeyField],
+        where: { userId: user.id, id: params.id },
+      });
+    }
+    if (channel) {
+      const result = await readChannelLastEntry([channel]);
+      const lastEntry = result[0].lastEntry;
+      const strJson = JSON.stringify(lastEntry);
+      const data = `data: ${strJson}\n\n`;
+      res.write(data);
+      if (isDev) {
+        console.log(`Feed: ${strJson}`);
+      }
+    }
+  };
+  const interval = setInterval(feedData, 5000);
+
+  req.on('close', () => {
+    clearInterval(interval);
+    console.log('Connection closed');
+  });
 };
 
 module.exports = {
@@ -188,4 +232,5 @@ module.exports = {
   update,
   remove,
   readFeeds,
+  eventsHandler,
 };

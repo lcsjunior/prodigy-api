@@ -11,6 +11,7 @@ const {
   remove,
   bulkUpdate,
   readFeeds,
+  eventsHandler,
 } = require('../controllers/channel');
 
 router.get(
@@ -18,10 +19,12 @@ router.get(
   isAuthenticated,
   list
 );
-router.post('/', isAuthenticated, validate(body('channelId').isInt().toInt()), [
-  create,
-  detail,
-]);
+router.post(
+  '/', //
+  isAuthenticated,
+  validate(body('channelId').isInt().toInt()),
+  [create, detail]
+);
 router.get(
   '/:id', //
   isAuthenticated,
@@ -50,6 +53,12 @@ router.get(
   isAuthenticated,
   validate(param('id').isInt().toInt()),
   readFeeds
+);
+router.get(
+  '/:id/events', //
+  isAuthenticated,
+  validate(param('id').isInt().toInt()),
+  eventsHandler
 );
 
 module.exports = router;
